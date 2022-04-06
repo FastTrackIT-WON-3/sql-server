@@ -1,0 +1,22 @@
+CREATE TABLE Departments(
+	Id INT NOT NULL IDENTITY (1, 1),
+	DepartmentName NVARCHAR(100) NOT NULL,
+	CompanyName NVARCHAR(100) NOT NULL,
+
+	CONSTRAINT PK_Departments PRIMARY KEY (Id)
+);
+
+CREATE TABLE Employees(
+	Id INT NOT NULL IDENTITY(1, 1),
+	LastName NVARCHAR(100) NOT NULL,
+	FirstName NVARCHAR(100) NOT NULL,
+	CNP NVARCHAR(15) NOT NULL,
+	DateOfBirth	DATETIME NOT NULL,
+	Gender INT NOT NULL CONSTRAINT DF_Gender DEFAULT 1,
+	DepartmentId INT NULL,
+
+	CONSTRAINT PK_Employees PRIMARY KEY (Id),
+	CONSTRAINT FK_Employees_Departments FOREIGN KEY (DepartmentId) REFERENCES Departments(Id) ON DELETE SET NULL,
+	CONSTRAINT UQ_FirstNameAndLastName UNIQUE (LastName, FirstName, DateOfBirth),
+	CONSTRAINT CHK_DateOfBirth CHECK (DateOfBirth < GETDATE() AND DateOfBirth >= DATEADD(yy, -100, GETDATE()))
+);
